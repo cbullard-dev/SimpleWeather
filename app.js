@@ -71,7 +71,6 @@ async function GetWeather(locationData) {
     if (response.hasOwnProperty("data")) {
       forecast_data.forecast_for = response.data.city.name;
       forecast_data.forecast = [];
-      // log("Forecast for: " + response.data.city.name);
       response.data.list.forEach((element) => {
         if (element.dt_txt.includes("09:00:00")) {
           forecast_data.forecast.push({
@@ -90,7 +89,9 @@ async function GetWeather(locationData) {
   }
 }
 
+// This function was used before setting this up as a Webapp
 async function main() {
+  // Currently hard coding location
   const location = await GetLocation(undefined, "New South Wales", "Australia");
 
   if (location !== undefined) {
