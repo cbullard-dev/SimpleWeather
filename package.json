@@ -3,10 +3,9 @@
   "packageManager": "yarn@3.2.1",
   "description": "My own simple weather app in Node.JS",
   "version": "0.0.1",
-  "main": "app.js",
+  "main": "src/app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon ./app.js"
+    "test": "nodemon -r dotenv/config ./src/app.js"
   },
   "author": "Callum Bullard",
   "license": "MIT",
