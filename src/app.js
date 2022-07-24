@@ -3,6 +3,7 @@ const express = require('express')
 const axios = require('axios')
 const slack = require('./slack')
 const { ClearOnClose } = require('slack-block-builder/dist/internal')
+const data = require('./datastore')
 
 // Create express app
 const app = new express()
@@ -117,9 +118,8 @@ async function GetWeather(locationData) {
 }
 
 app.get('/', async (req, res) => {
-  log('new message')
-  res.sendStatus(200)
-  log(await GetWeatherTwo(req.query.location || undefined))
+  console.log(data.add_user({ user_id: 'test', team_id: 'abcd' }))
+  res.sendStatus(200).end()
 })
 
 app.get('/forecast', async (req, res) => {
@@ -151,4 +151,5 @@ const server = app.listen(process.env.PORT || 8080, () => {
   let port = server.address().port
 
   log(`Server started at address http://${address}:${port}`)
+  log(`Do you need to change your ngrok URL?`)
 })
