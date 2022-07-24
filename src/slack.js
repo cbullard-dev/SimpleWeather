@@ -2,6 +2,7 @@ const express = require('express')
 const router = express.Router()
 const ax = require('axios')
 const { appHome, appHomeNoToken } = require('../views/home')
+const
 const helper = require('./helpers')
 
 const slack_api = ax.create({
@@ -75,6 +76,15 @@ router.post('/events', async (req, res) => {
   }
   res.send(200).end()
   console.log(req.body)
+})
+
+router.get('/test', async (req, res) => {
+  try {
+    const body = {
+      user_id: req.query.user_id,
+      view: 
+    }
+  } catch (e) {}
 })
 
 module.exports = router

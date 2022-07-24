@@ -8,9 +8,9 @@ const appHomeNoToken = () => {
         text: 'This is a simple weather app using the Open Weather Map API',
       }),
       Blocks.Divider(),
-      Blocks.Section({
-        text: `Doesn't look like you have added an Open Weather Map API token yet.\nClick the settings button to setup.`,
-      }),
+      Blocks.Section().text(
+        `Doesn't look like you have added an Open Weather Map API token yet.\nClick the settings button to setup.`
+      ),
       Blocks.Actions().elements(
         Elements.Button({
           type: 'plain_text',
