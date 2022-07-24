@@ -1,12 +1,15 @@
 // Define variables
 const express = require('express')
 const axios = require('axios')
+const slack = require('./slack')
+const { ClearOnClose } = require('slack-block-builder/dist/internal')
 
 // Create express app
 const app = new express()
 
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
+app.use('/slack', slack)
 
 // Create weather API instance
 const weather = axios.create({
@@ -48,6 +51,8 @@ async function GetLocation(cityName, stateCode, countryCode) {
 
     const response = await weatherGeo.get('/direct?' + params.toString())
 
+    log(response.data)
+
     let locationLatLong = {
       lat: response.data[0].lat,
       lon: response.data[0].lon,
@@ -59,6 +64,22 @@ async function GetLocation(cityName, stateCode, countryCode) {
     } else {
       console.log(error)
     }
+  }
+}
+
+async function GetWeatherTwo(location) {
+  const params = new URLSearchParams()
+  const forecast_data = {}
+
+  params.append('q', location)
+  params.append('units', 'metric')
+  params.append('appid', process.env.API_TOKEN)
+
+  try {
+    const response = await weather.get('/find?' + params)
+    log(response.data)
+  } catch (e) {
+    errorLog(e.response.data)
   }
 }
 
@@ -96,7 +117,9 @@ async function GetWeather(locationData) {
 }
 
 app.get('/', async (req, res) => {
+  log('new message')
   res.sendStatus(200)
+  log(await GetWeatherTwo(req.query.location || undefined))
 })
 
 app.get('/forecast', async (req, res) => {
@@ -119,6 +142,8 @@ app.get('/forecast', async (req, res) => {
     res.stateCode(408)
   }
 })
+
+slack.post
 
 const server = app.listen(process.env.PORT || 8080, () => {
   let address = server.address().address
