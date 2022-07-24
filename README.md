@@ -22,6 +22,8 @@ A simple open source weather app for Slack to better learn Node.JS, Express, Axi
 - [ ] Report to the user the current weather for the location based on the geo location
 - [ ] Provide the user a weather forecast for the geo location
 
+[(Back to top)](#table-of-contents)
+
 # Features
 
 - This app is still in early development, Currently no features really work except basic functionality testing
