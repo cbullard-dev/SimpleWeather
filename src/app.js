@@ -2,7 +2,6 @@
 const express = require('express')
 const axios = require('axios')
 const slack = require('./slack')
-const { ClearOnClose } = require('slack-block-builder/dist/internal')
 const data = require('./datastore')
 
 // Create express app

@@ -1,9 +1,9 @@
 const express = require('express')
 const router = express.Router()
 const ax = require('axios')
-const { appHome, appHomeNoToken } = require('../views/home')
-const modals = require('../views/modals')
-const messages = require('../views/messages')
+const appHome = require('./views/home')
+const modals = require('./views/modals')
+const messages = require('./views/messages')
 const helper = require('./helpers')
 const data = require('./datastore')
 
