@@ -1,4 +1,4 @@
-const { HomeTab, Blocks, Elements, Section } = require('slack-block-builder')
+import { HomeTab, Blocks, Elements, Section } from 'slack-block-builder'
 
 const appHomeNoToken = () => {
   return HomeTab()

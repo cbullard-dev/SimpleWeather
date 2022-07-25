@@ -1,11 +1,11 @@
 // Define variables
-const express = require('express')
-const axios = require('axios')
-const slack = require('./slack')
-const data = require('./datastore')
+import express from 'express'
+import axios from 'axios'
+import slack from './slack'
+import data from './datastore'
 
 // Create express app
-const app = new express()
+const app = express()
 
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
@@ -24,29 +24,30 @@ const weatherGeo = axios.create({
 })
 
 // Log function
-function log(message) {
+function log(message: string) {
   console.log(message)
 }
 
 // Error log function
-function errorLog(errorMessage) {
+function errorLog(errorMessage: string) {
   console.error(errorMessage)
 }
 
 // Function to get location based on city, state and country
-async function GetLocation(cityName, stateCode, countryCode) {
+async function GetLocation(location) {
   // Try to get the location based on the City, State and Country provided
   try {
-    const query = []
+    const query: string[] = []
     const params = new URLSearchParams()
-    if (cityName !== undefined) query.push(cityName)
-    if (stateCode !== undefined) query.push(stateCode)
-    if (countryCode !== undefined) query.push(countryCode)
+    if (location.cityName) query.push(location.cityName)
+    if (location.stateCode) query.push(location.stateCode)
+    if (location.countryCode) query.push(location.countryCode)
 
     if (query.length >= 1) {
       params.append('q', query.join(','))
     }
 
+    if (typeof process.env.API_TOKEN !== 'string') return
     params.append('appid', process.env.API_TOKEN)
 
     const response = await weatherGeo.get('/direct?' + params.toString())
@@ -58,16 +59,16 @@ async function GetLocation(cityName, stateCode, countryCode) {
       lon: response.data[0].lon,
     }
     return locationLatLong
-  } catch (error) {
-    if (!error.hasOwnProperty('response')) {
-      console.log(error.response)
+  } catch (e: any) {
+    if (!e.hasOwnProperty('response')) {
+      console.log(e.response)
     } else {
-      console.log(error)
+      console.log(e)
     }
   }
 }
 
-async function GetWeatherTwo(location) {
+async function GetWeatherTwo(location: string) {
   const params = new URLSearchParams()
   const forecast_data = {}
 
