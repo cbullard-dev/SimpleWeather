@@ -1,6 +1,6 @@
 import { HomeTab, Blocks, Elements, Section } from 'slack-block-builder'
 
-const appHomeNoToken = () => {
+export const appHomeNoToken = () => {
   return HomeTab()
     .blocks(
       Blocks.Header({ text: ':mostly_sunny: Simple Weather :mostly_sunny:' }),
@@ -12,11 +12,8 @@ const appHomeNoToken = () => {
         `Doesn't look like you have added an Open Weather Map API token yet.\nClick the settings button to setup.`
       ),
       Blocks.Actions().elements(
-        Elements.Button({
-          type: 'plain_text',
-          text: ':gear: Settings',
-          emoji: true,
-        })
+        Elements.Button()
+          .text(':gear: Settings')
           .actionId('open_settings')
           .primary()
       )
@@ -24,7 +21,7 @@ const appHomeNoToken = () => {
     .buildToObject()
 }
 
-const appHome = (location, todays_weather, five_day_forecast) => {
+export const appHome = (todays_weather, five_day_forecast) => {
   return HomeTab()
     .blocks(
       Blocks.Header({ text: ':mostly_sunny: Simple Weather :mostly_sunny:' }),
@@ -55,9 +52,4 @@ const appHome = (location, todays_weather, five_day_forecast) => {
       )
     )
     .buildToObject()
-}
-
-module.exports = {
-  appHomeNoToken,
-  appHome,
 }
