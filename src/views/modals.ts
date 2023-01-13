@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 const { Modal, Blocks, Elements, Option, Bits } = require('slack-block-builder')
 
 const settings = (options) => {
@@ -85,6 +87,7 @@ const add_weather_token = () => {
       Blocks.Header().text('Open Weather Map Token'),
       Blocks.Divider(),
       Blocks.Input()
+        .blockId('open_weather_input')
         .optional()
         .label('Enter Open Weather Token')
         .element(
@@ -93,6 +96,7 @@ const add_weather_token = () => {
             .maxLength(255)
             .focusOnLoad(true)
             .placeholder('API token here')
+            .actionId('api_token_text_input')
         )
     )
     .submit('Save')
