@@ -3,6 +3,12 @@ import { App, Installation, LogLevel } from '@slack/bolt'
 import { appHome, appHomeNoToken } from './views/apphome'
 import { user } from 'slack-block-builder'
 import { add_weather_token } from './views/modals'
+import {
+  databaseData,
+  userTokenDatabase,
+  userConfigDatabase,
+  weatherDatabase,
+} from './database/database'
 import axios from 'axios'
 
 let slackPort: number
@@ -13,40 +19,9 @@ if (typeof process.env.PORT === 'string') {
   slackPort = 3000
 }
 
-const databaseData = {}
-const database = {
-  set: async (key: string, data: Installation<AuthVersion, Boolean>) => {
-    databaseData[key] = data
-    console.log('Added Database Element: ', databaseData)
-  },
-  get: async (key: string) => {
-    console.log('Return Database Element: ', databaseData)
-    return databaseData[key]
-  },
-  delete: async (key: string) => {
-    delete databaseData[key]
-  },
-}
-
-const userTokenData = {}
-const userTokenDatabase = {
-  set: async (userId: string, userToken: string) => {
-    userTokenData[userId] = userToken
-    console.log(userTokenData)
-  },
-  get: async (userId: string) => {
-    console.log(userTokenData[userId])
-    return userTokenData[userId]
-  },
-  delete: async (userId: string) => {
-    console.log('Deleting data ', userTokenData[userId])
-    delete userTokenData[userId]
-  },
-}
-
 // For Dev environment only
 const slackApp = new App({
-  logLevel: LogLevel.DEBUG,
+  logLevel: LogLevel.INFO,
   signingSecret: process.env.SLACK_SIGNING_SECRET,
   token: process.env.SLACK_BOT_TOKEN,
   appToken: process.env.SLACK_SOCKET_TOKEN,
@@ -117,33 +92,41 @@ const slackApp = new App({
 // })
 
 slackApp.event('app_home_opened', async ({ event, client, logger }) => {
+  const user = event.user
+  const userConfigExists = userConfigDatabase.exists(user)
   try {
-    const res = await client.views.publish({
-      user_id: event.user,
-      view: appHomeNoToken(),
-    })
+    if (userConfigExists) {
+      const res = await client.views.publish({
+        user_id: event.user,
+        view: appHomeNoToken(),
+      })
 
-    logger.info(res)
+      logger.info(res)
+    } else {
+      const res = await client.views.publish({
+        user_id: event.user,
+        view: appHome({}, {}),
+      })
+
+      logger.info(res)
+    }
   } catch (e) {
     logger.error(e)
   }
 })
 
-slackApp.action(
-  'open_settings',
-  async ({ ack, body, action, client, logger }) => {
-    try {
-      await ack()
-      const modalOpen = await client.views.open({
-        trigger_id: body.trigger_id,
-        view: add_weather_token(),
-      })
-      logger.info(modalOpen)
-    } catch (e) {
-      logger.error(e)
-    }
+slackApp.action('open_settings', async ({ ack, body, action, client, logger }) => {
+  try {
+    await ack()
+    const modalOpen = await client.views.open({
+      trigger_id: body.trigger_id,
+      view: add_weather_token(),
+    })
+    logger.info(modalOpen)
+  } catch (e) {
+    logger.error(e)
   }
-)
+})
 
 slackApp.view(
   'add_open_weather_token',
