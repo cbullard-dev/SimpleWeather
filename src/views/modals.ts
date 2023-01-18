@@ -1,27 +1,16 @@
 // @ts-nocheck
+import { Modal, Blocks, Elements, Option, Bits } from 'slack-block-builder'
 
-const { Modal, Blocks, Elements, Option, Bits } = require('slack-block-builder')
-
-const settings = (options) => {
-  const metric_option = Option()
-    .text('Metric')
-    .value('metric_units')
-    .description('Use °C')
-  const imperial_option = Option()
-    .text('Imperial')
-    .value('imperial_value')
-    .description('Use °F')
+export const settings = (options) => {
+  const metric_option = Option().text('Metric').value('metric_units').description('Use °C')
+  const imperial_option = Option().text('Imperial').value('imperial_value').description('Use °F')
 
   let unit_of_measurement = metric_option
   let token_active = false
   let default_location = 'Not set'
   let location_button_text = 'Set default location'
 
-  if (
-    options &&
-    options.unit_of_measurement &&
-    options.unit_of_measurement !== 'metric'
-  ) {
+  if (options && options.unit_of_measurement && options.unit_of_measurement !== 'metric') {
     unit_of_measurement = imperial_option
   }
 
@@ -29,11 +18,7 @@ const settings = (options) => {
     token_active = true
   }
 
-  if (
-    options &&
-    options.default_location &&
-    options.default_location !== 'Not set'
-  ) {
+  if (options && options.default_location && options.default_location !== 'Not set') {
     default_location = options.default_location
     location_button_text = 'Change default location'
   }
@@ -69,16 +54,14 @@ const settings = (options) => {
       ),
       Blocks.Section().text(`*Token active:* ${token_active}`),
       Blocks.Actions().elements(
-        Elements.Button()
-          .text('Add new Open Weather Maps API token')
-          .actionId('add_api_token')
+        Elements.Button().text('Add new Open Weather Maps API token').actionId('add_api_token')
       )
     )
     .submit('Save Settings')
     .buildToObject()
 }
 
-const add_weather_token = () => {
+export const add_weather_token = () => {
   // Return the add token modal for use in Slack
   return Modal()
     .title('Add Open Weather Token')
@@ -103,9 +86,4 @@ const add_weather_token = () => {
     .close('back')
     .notifyOnClose()
     .buildToObject()
-}
-
-module.exports = {
-  settings,
-  add_weather_token,
 }

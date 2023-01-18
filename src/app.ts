@@ -2,7 +2,7 @@
 import { App, Installation, LogLevel } from '@slack/bolt'
 import { appHome, appHomeNoToken } from './views/apphome'
 import { user } from 'slack-block-builder'
-import { add_weather_token } from './views/modals'
+import { openSettingsAction } from './modules/events'
 import {
   databaseData,
   userTokenDatabase,
@@ -115,18 +115,7 @@ slackApp.event('app_home_opened', async ({ event, client, logger }) => {
   }
 })
 
-slackApp.action('open_settings', async ({ ack, body, action, client, logger }) => {
-  try {
-    await ack()
-    const modalOpen = await client.views.open({
-      trigger_id: body.trigger_id,
-      view: add_weather_token(),
-    })
-    logger.info(modalOpen)
-  } catch (e) {
-    logger.error(e)
-  }
-})
+slackApp.action('open_settings', openSettingsAction)
 
 slackApp.view(
   'add_open_weather_token',
