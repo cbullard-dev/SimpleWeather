@@ -1,28 +1,29 @@
-// @ts-nocheck
+import { UserOptions, WeatherData } from '../utils/types'
+import { Installation } from '@slack/bolt'
 
-const databaseData = {}
-const database = {
-  set: async (key: string, data: Installation<AuthVersion, boolean>) => {
-    databaseData[key] = data
-    console.log('Added Database Element: ', databaseData)
+const oauthDatabaseData: Record<string, Installation> = {}
+const oauthDatabase = {
+  set: async (key: string, data: Installation) => {
+    oauthDatabaseData[key] = data
+    console.log('Added Database Element: ', oauthDatabaseData)
   },
   get: async (key: string) => {
-    console.log('Return Database Element: ', databaseData)
-    return databaseData[key]
+    console.log('Return Database Element: ', oauthDatabaseData)
+    return oauthDatabaseData[key]
   },
   exists: async (key: string) => {
     console.log('Checking is team token exists')
-    return Object.prototype.hasOwnProperty.call(databaseData, key)
+    return Object.prototype.hasOwnProperty.call(oauthDatabaseData, key)
   },
   delete: async (key: string) => {
-    delete databaseData[key]
+    delete oauthDatabaseData[key]
   },
 }
 
-const userTokenDatabaseData = {}
+const userTokenDatabaseData: Record<string, string> = {}
 const userTokenDatabase = {
-  set: async (userId: string, userToken: string) => {
-    userTokenDatabaseData[userId] = userToken
+  set: async (key: string, userToken: string) => {
+    userTokenDatabaseData[key] = userToken
     console.log(userTokenDatabaseData)
   },
   get: async (userId: string) => {
@@ -39,32 +40,33 @@ const userTokenDatabase = {
   },
 }
 
-const userConfigDatabaseData = {}
-const userConfigDatabase = {
-  set: async (key: string, userConfigData: UserConfig) => {
-    userConfigDatabaseData[key] = userConfigData
-    console.log(userConfigDatabaseData)
+const userOptionDatabaseData: Record<string, UserOptions> = {}
+const userOptionDatabase = {
+  set: async (key: string, userOptionData: UserOptions) => {
+    userOptionDatabaseData[key] = userOptionData
+    console.log(userOptionDatabaseData)
   },
   get: async (key: string) => {
-    console.log(userConfigDatabaseData[key])
-    return userConfigDatabaseData[key]
+    console.log(userOptionDatabaseData[key])
+    return userOptionDatabaseData[key]
   },
   exists: async (key: string) => {
-    console.log(
-      'Checking key value pair exists',
-      Object.prototype.hasOwnProperty.call(userConfigDatabaseData, key)
-    )
-    return Object.prototype.hasOwnProperty.call(userConfigDatabaseData, key)
+    console.log('Checking key value pair exists', Object.prototype.hasOwnProperty.call(userOptionDatabaseData, key))
+    return Object.prototype.hasOwnProperty.call(userOptionDatabaseData, key)
   },
   delete: async (key: string) => {
-    console.log('Deleting data ', userConfigDatabaseData[key])
-    delete userConfigDatabaseData[key]
+    console.log('Deleting data ', userOptionDatabaseData[key])
+    delete userOptionDatabaseData[key]
+  },
+  updateTokenActivate: async (key: string, tokenActivation: boolean) => {
+    console.log('update user record ', tokenActivation)
+    userOptionDatabaseData[key].tokenActive = tokenActivation
   },
 }
 
-const weatherDatabaseData = {}
+const weatherDatabaseData: Record<string, WeatherData> = {}
 const weatherDatabase = {
-  set: async (key: string, weatherData) => {
+  set: async (key: string, weatherData: WeatherData) => {
     weatherDatabaseData[key] = weatherData
     console.log(weatherDatabaseData)
   },
@@ -73,10 +75,7 @@ const weatherDatabase = {
     return weatherDatabaseData[key]
   },
   exists: async (key: string) => {
-    console.log(
-      'Checking key value pair exists',
-      Object.prototype.hasOwnProperty.call(weatherDatabaseData, key)
-    )
+    console.log('Checking key value pair exists', Object.prototype.hasOwnProperty.call(weatherDatabaseData, key))
     return Object.prototype.hasOwnProperty.call(weatherDatabaseData, key)
   },
   delete: async (key: string) => {
@@ -85,8 +84,8 @@ const weatherDatabase = {
   },
 }
 
-type UserConfig = {
-  defaultLocation: string
-}
+// type UserConfig = {
+//   defaultLocation: string
+// }
 
-export = { userTokenDatabase, database, userConfigDatabase, weatherDatabase }
+export { userTokenDatabase, oauthDatabase, userOptionDatabase, weatherDatabase }

@@ -1,4 +1,4 @@
-import { Axios } from 'axios'
+import { Axios, AxiosError } from 'axios'
 
 const geoApiBaseUrl = 'http://api.openweathermap.org/geo/1.0'
 const weatherApiBaseUrl = 'https://api.openweathermap.org/data/2.5'
@@ -11,5 +11,13 @@ const geoAxios = new Axios({
 })
 
 const weatherLocation = async (locationName: string, token: string, limit?: number | 5) => {
-  geoAxios.get('/direct', { params: { q: locationName, limit: limit, appid: token } })
+  try {
+    const locationResponse = await geoAxios.get('/direct', {
+      params: { q: locationName, limit: limit, appid: token },
+    })
+
+    console.log(locationResponse.data)
+  } catch (e: any) {
+    console.error('Error Name: ', e.name, '\nError Message: ', e.message)
+  }
 }

@@ -1,20 +1,20 @@
-//@ts-nocheck
 import { SlackActionMiddlewareArgs } from '@slack/bolt'
-import { Middleware } from '@slack/bolt/dist/types'
-import { add_weather_token, settings } from '../views/modals'
+import { BlockAction, Middleware } from '@slack/bolt/dist/types'
+import { settingsModal, addWeatherTokenModal, weatherLocationSearchModal } from '../views/modals'
+import { userOptionDatabase } from '../database/database'
+import { UserOptionsDefault } from '../utils/types'
 
-const openSettingsAction: Middleware<SlackActionMiddlewareArgs> = async ({
-  ack,
-  client,
-  body,
-  logger,
-  action,
-}) => {
+const openSettingsAction: Middleware<SlackActionMiddlewareArgs> = async ({ ack, client, body, logger }) => {
+  logger.info('Triggered: openSettingsAction')
+  console.log(body)
+  await ack()
+  if (!(await userOptionDatabase.exists(body.user.id))) {
+    await userOptionDatabase.set(body.user.id, UserOptionsDefault)
+  }
   try {
-    await ack()
     const modalOpen = await client.views.open({
-      trigger_id: body.trigger_id,
-      view: add_weather_token(),
+      trigger_id: (<BlockAction>body).trigger_id,
+      view: settingsModal(await userOptionDatabase.get(body.user.id)),
     })
     logger.info(modalOpen)
   } catch (e) {
@@ -22,4 +22,20 @@ const openSettingsAction: Middleware<SlackActionMiddlewareArgs> = async ({
   }
 }
 
-export = { openSettingsAction }
+const openLocationSettingsAction: Middleware<SlackActionMiddlewareArgs> = async ({ ack, client, body }) => {
+  await ack()
+  client.views.push({
+    trigger_id: (<BlockAction>body).trigger_id,
+    view: weatherLocationSearchModal(),
+  })
+}
+
+const openWeatherTokenSettingsAction: Middleware<SlackActionMiddlewareArgs> = async ({ ack, client, body }) => {
+  await ack()
+  client.views.push({
+    trigger_id: (<BlockAction>body).trigger_id,
+    view: addWeatherTokenModal(),
+  })
+}
+
+export { openSettingsAction, openLocationSettingsAction, openWeatherTokenSettingsAction }
