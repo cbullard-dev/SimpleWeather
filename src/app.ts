@@ -1,7 +1,7 @@
 import { App, Installation, LogLevel } from '@slack/bolt'
 import { appHome, appHomeNoToken } from './views/apphome'
 import { user } from 'slack-block-builder'
-import { openLocationSettingsAction, openSettingsAction, openWeatherTokenSettingsAction } from './modules/events'
+import { openLocationSettingsAction, openSettingsAction, openWeatherTokenSettingsAction } from './modules/actions'
 import { oauthDatabase, userOptionDatabase, userTokenDatabase } from './database/database'
 import { userAddNewToken } from './modules/views'
 import axios from 'axios'
