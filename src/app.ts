@@ -1,19 +1,17 @@
-import { App, Installation, LogLevel } from '@slack/bolt'
+import { App, LogLevel } from '@slack/bolt'
 import { appHome, appHomeNoToken } from './views/apphome'
-import { user } from 'slack-block-builder'
 import { openLocationSettingsAction, openSettingsAction, openWeatherTokenSettingsAction } from './modules/actions'
-import { oauthDatabase, userOptionDatabase, userTokenDatabase } from './database/database'
+import { oauthDatabase, userOptionDatabase } from './database/database'
 import { userAddNewToken } from './modules/views'
-import axios from 'axios'
 
-let slackPort: number
+// let slackPort: number
 let slackApp: App
 
-if (typeof process.env.PORT === 'string') {
-  slackPort = parseInt(process.env.PORT)
-} else {
-  slackPort = 3000
-}
+// if (typeof process.env.PORT === 'string') {
+//   slackPort = parseInt(process.env.PORT)
+// } else {
+//   slackPort = 4000
+// }
 
 // For Dev environment only
 console.log(process.env.NODE_ENV)

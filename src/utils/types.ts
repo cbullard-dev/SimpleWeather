@@ -68,10 +68,22 @@ type WeatherData = {
   cod: number
 }
 
+type WeatherApiArgs = {
+  longitude: number
+  latitude: number
+  ApiToken: string
+}
+
+type WeatherLocationApiArgs = {
+  locationName: string
+  ApiToken: string
+  limit?: number
+}
+
 const UserOptionsDefault: UserOptions = {
   unitOfMeasurement: MeasurementUnits.metric,
   defaultLocationSet: false,
   tokenActive: false,
 }
 
-export { UserOptions, MeasurementUnits, WeatherData, UserOptionsDefault }
+export { UserOptions, MeasurementUnits, WeatherApiArgs, WeatherLocationApiArgs, WeatherData, UserOptionsDefault }
