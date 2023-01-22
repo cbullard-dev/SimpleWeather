@@ -1,4 +1,4 @@
-import { Axios, AxiosError } from 'axios'
+import { Axios } from 'axios'
 import { WeatherApiArgs, WeatherLocationApiArgs } from '../utils/types'
 
 const geoApiBaseUrl = 'http://api.openweathermap.org/geo/1.0'
